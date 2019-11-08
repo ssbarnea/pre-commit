@@ -1,0 +1,23 @@
+name: Distros Check
+
+on: [push]
+
+jobs:
+
+  distros:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install requirements
+      run: |
+        export DEBIAN_FRONTEND="noninteractive" && \
+        sudo -E apt-get update && \
+        sudo -E apt-get install -y tox
+    - name: Test centos:8
+      run: TEST_IMAGE=pycontribs/centos:8 /usr/bin/tox -e distro
+    - name: Test centos:7
+      run: TEST_IMAGE=pycontribs/centos:7 /usr/bin/tox -e distro
+    - name: Test ubuntu:latest
+      run: TEST_IMAGE=pycontribs/ubuntu:latest /usr/bin/tox -e distro
